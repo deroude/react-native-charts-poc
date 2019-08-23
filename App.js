@@ -2,19 +2,24 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryZoomContainer, VictoryBrushContainer } from "victory-native";
 
-const data = [
-  { quarter: 1, earnings: 13000 },
-  { quarter: 2, earnings: 16500 },
-  { quarter: 3, earnings: 14250 },
-  { quarter: 4, earnings: 19000 }
-];
-
 export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
       zoomDomain: { x: [new Date(1990, 1, 1), new Date(2009, 1, 1)] }
     };
+  }
+
+  get data(){
+    const data=[];
+    for(let y=1990;y<2016;y++){
+      for(let m=1;m<13;m++){
+        for(let d=1;d<21;d++){          
+            data.push({a:new Date(y,m,d),b:Math.random()*2000+1000});
+        }
+      }
+    }
+    return data;
   }
 
   handleZoom(domain) {
@@ -37,16 +42,7 @@ export default class App extends React.Component {
               style={{
                 data: { stroke: "tomato" }
               }}
-              data={[
-                { a: new Date(1982, 1, 1), b: 125 },
-                { a: new Date(1987, 1, 1), b: 257 },
-                { a: new Date(1993, 1, 1), b: 345 },
-                { a: new Date(1997, 1, 1), b: 515 },
-                { a: new Date(2001, 1, 1), b: 132 },
-                { a: new Date(2005, 1, 1), b: 305 },
-                { a: new Date(2011, 1, 1), b: 270 },
-                { a: new Date(2015, 1, 1), b: 470 }
-              ]}
+              data={this.data}
               x="a"
               y="b"
             />
