@@ -10,12 +10,13 @@
   "dependencies": {
     "react": "16.8.6",
     "react-native": "0.60.5",
+    "react-native-charts-wrapper": "^0.5.5",
     "react-native-svg": "9.6.4",
     "victory-native": "^33.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
-    "@babel/runtime": "7.5.5",
+    "@babel/runtime": "^7.5.5",
     "@react-native-community/eslint-config": "0.0.3",
     "babel-jest": "24.9.0",
     "eslint": "6.2.1",
