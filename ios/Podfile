@@ -29,6 +29,8 @@ target 'ReactNativeChartsPoC' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'ReactNativeChartsPoCTests' do
     inherit! :search_paths
     # Pods for testing
