@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet, View, Picker } from "react-native";
-import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryZoomContainer, VictoryBrushContainer } from "victory-native";
-
+import { StyleSheet, View, Picker, Button } from "react-native";
+import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictorySelectionContainer } from "victory-native";
 
 export default class VictoryDemo extends React.Component {
   constructor() {
@@ -9,7 +8,7 @@ export default class VictoryDemo extends React.Component {
     this.state = { count: 50, data: [] };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.changeData(50);
   }
 
@@ -17,15 +16,19 @@ export default class VictoryDemo extends React.Component {
     title: 'Victory Charts Demo',
   };
 
-  changeData(count) {
+  changeData(count, start = new Date(2016, 1, 1).getTime(), end = new Date().getTime()) {
     const data = [];
-    const start = new Date(2016, 1, 1).getTime();
-    const end = new Date().getTime();
     const interval = (end - start) / count;
     for (let d = start; d < end; d += interval) {
       data.push({ a: new Date(d), b: Math.random() * 2000 + 1000 });
     }
     this.setState({ count: count, data: data });
+  }
+
+  selectZoom(points, bounds, props) {
+    // console.error(points,bounds,props);
+    this.changeData(this.state.count, new Date(bounds.x[0]).getTime(), new Date(bounds.x[1]).getTime());
+    return false;
   }
 
   render() {
@@ -41,17 +44,25 @@ export default class VictoryDemo extends React.Component {
           <Picker.Item label='500' value={5000} />
           <Picker.Item label='5000' value={50000} />
         </Picker>
+        <Button
+          title="Reset"
+          onPress={() => this.changeData(50)}
+        />
         {this.state.data.length > 0 && <VictoryChart width={350} height={300} theme={VictoryTheme.material} scale={{ x: "time" }}
           containerComponent={
-            <VictoryZoomContainer
-              zoomDimension="x"
+            <VictorySelectionContainer
+              selectionDimension="x"
+              onSelection={this.selectZoom.bind(this)}
+            // onSelection={(a,b,c)=>console.error('bla', JSON.stringify(b))}
+            // selectionStyle={{
+            //   fill: "tomato", fillOpacity: 0.5,
+            //   stroke: "tomato", strokeWidth: 2
+            // }}
             />
           }
         >
           <VictoryLine
-            style={{
-              data: { stroke: "tomato" }
-            }}
+            style={{ data: { stroke: ({ active }) => active ? "tomato" : "gray" } }}
             data={this.state.data}
             x="a"
             y="b"
