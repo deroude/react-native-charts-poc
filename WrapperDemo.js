@@ -7,6 +7,7 @@ import {
   View, processColor,
   PanResponder
 } from 'react-native';
+import data from './data'
 
 //https://github.com/wuxudong/react-native-charts-wrapper/tree/master/Example/app
 
@@ -16,7 +17,6 @@ const ranges = {
   '3y': { start: new Date(2017, 1, 1).getTime(), end: new Date().getTime() },
   'ytd': { start: new Date(2019, 1, 1).getTime(), end: new Date().getTime() },
   '6m': { start: new Date(2019, 3, 1).getTime(), end: new Date().getTime() },
-  '1m': { start: new Date(2019, 8, 1).getTime(), end: new Date().getTime() }
 };
 
 export default class WrapperDemo extends React.Component {
@@ -80,12 +80,11 @@ export default class WrapperDemo extends React.Component {
 
 
   changeData(count, start = new Date(2016, 1, 1).getTime(), end = new Date().getTime()) {
-    const data = [];
-    const interval = (end - start) / count;
-    for (let d = start; d < end; d += interval) {
-      data.push({ x: new Date(d).getTime(), y: Math.random() * 2000 + 1000 });
-    }
-    this.setState({ count, data });
+    const ndata = data.filter(d => {
+      const dday = new Date(d.day).getTime();
+      return dday > start && dday < end;
+    }).map(d => ({ x: new Date(d.day).getTime(), y: d.value }));
+    this.setState({ count, data:ndata });
   }
 
   selectZoom(points, bounds, props) {
@@ -155,8 +154,8 @@ export default class WrapperDemo extends React.Component {
                 dataSets: [{
                   label: "demo", values: this.state.data,
                   config: {
-                    drawCircles: true,
-                    drawCircleHole: true,
+                    drawCircles: false,
+                    drawCircleHole: false,
                     circleColor: processColor('white'),
                     drawValues: false,
                     drawFilled: true,

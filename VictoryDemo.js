@@ -74,12 +74,11 @@ export default class VictoryDemo extends React.Component {
   };
 
   changeData(count, start = new Date(2016, 1, 1).getTime(), end = new Date().getTime()) {
-    const data = [];
-    const interval = (end - start) / count;
-    for (let d = start; d < end; d += interval) {
-      data.push({ a: new Date(d), b: Math.random() * 2000 + 1000 });
-    }
-    this.setState({ count, data });
+    const ndata = data.filter(d => {
+      const dday = new Date(d.day).getTime();
+      return dday > start && dday < end;
+    }).map(d => ({ a: new Date(d.day), b: d.value }));
+    this.setState({ count, data:ndata });
   }
 
   selectZoom(points, bounds, props) {
